@@ -85,7 +85,7 @@ namespace ProcessingApp.Trade_Service.Src.Repository.impl
         public IObservable<int> SaveAll(List<Trade> input)
         {
             return StoreTradesInDb(input)
-                .Do(e => _log.LogInformation("--- [DB] --- Inserted " + e + " trades into DB"));
+                .Do(e => _log.LogInformation($"--- [DB] --- Inserted { e} trades into DB"));
         }
 
         private IObservable<long> GetTradeStats()
