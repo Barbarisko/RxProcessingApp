@@ -29,9 +29,11 @@ namespace ProcessingApp.Sockets
 
         private static IObservable<long> HandleRequestedAveragePriceIntervalValue(IObservable<string> requestedInterval)
         {
-            // TODO: input may be incorrect, pass only correct interval
-            // TODO: ignore invalid values (empty, non number, <= 0, > 60)
-            return Observable.Never<long>();
+            var checkedInterval = requestedInterval
+                .Where(i => long.TryParse(i, out var o) && o > 0 && o <= 60)
+                .Select(long.Parse);
+
+            return checkedInterval;
         }
     }
 }
