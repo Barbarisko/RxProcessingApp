@@ -44,7 +44,6 @@ namespace ProcessingApp.Price_Service.Src.Service.Impl
             // TODO: filter only Price messages
             // TODO: verify that price message are valid
             // HINT: Use MessageMapper methods to perform filtering and validation
-            var dto = MessageMapper.MapToPriceMessage((Dictionary<string, object>)input);
 
             return input
                 .Where(MessageMapper.IsPriceMessageType)
