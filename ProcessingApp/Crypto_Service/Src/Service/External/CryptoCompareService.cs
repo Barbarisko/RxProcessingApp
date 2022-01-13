@@ -42,7 +42,9 @@ namespace ProcessingApp.Crypto_Service.Src.Service.External
         // TODO: implement caching of 3 last elements & multi subscribers support
         private static IObservable<T> ProvideCaching<T>(IObservable<T> input)
         {
-            return input.Replay(CACHE_SIZE).AutoConnect();
+            return input
+                .Replay(CACHE_SIZE)
+                .AutoConnect();
         }
     }
 }

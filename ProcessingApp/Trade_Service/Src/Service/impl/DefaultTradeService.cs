@@ -58,15 +58,10 @@ namespace ProcessingApp.Trade_Service.Src.Service.impl
         private IObservable<Trade> MapToDomainTrade(IObservable<MessageDTO<MessageTrade>> input)
         {
             // TODO: Add implementation to mapping to com.example.part_10.domain.Trade
-            return input.Select(DomainMapper.MapToDomain);
+            return Observable.Never<Trade>();
         }
 
-        private static IObservable<int> ResilientlyStoreBatchToRepository(IList<Trade> batch, ITradeRepository tradeRepository)
-        {
-            return tradeRepository
-                .SaveAll(batch.ToList())
-                .RetryWithBackoffStrategy();
-        }
+
 
         private static IObservable<int> ResilientlyStoreByBatchesToAllRepositories(
             IObservable<Trade> input,
@@ -76,6 +71,13 @@ namespace ProcessingApp.Trade_Service.Src.Service.impl
             return input.Buffer(10)
                 .SelectMany(batch => ResilientlyStoreBatchToRepository(batch, tradeRepository1)
                     .Merge(ResilientlyStoreBatchToRepository(batch, tradeRepository2)));
+        }
+
+        private static IObservable<int> ResilientlyStoreBatchToRepository(IList<Trade> batch, ITradeRepository tradeRepository)
+        {
+            return tradeRepository
+                .SaveAll(batch)
+                .RetryWithBackoffStrategy();
         }
     }
 }
