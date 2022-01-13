@@ -75,16 +75,16 @@ namespace ProcessingApp
                             WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
                             await wsHandler.Handle(Observable.Create<string>(async (observer, ct) =>
+                            {
+                                var buffer = new byte[1024 * 4];
+                                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                                while (!result.EndOfMessage)
                                 {
-                                    var buffer = new byte[1024 * 4];
-                                    WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                                    while(!result.EndOfMessage)
-                                    {
-                                        buffer = new byte[1024 * 4];
-                                        result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                                        observer.OnNext(Encoding.UTF8.GetString(buffer, 0, result.Count));
-                                    }
-                                }))
+                                    buffer = new byte[1024 * 4];
+                                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                                    observer.OnNext(Encoding.UTF8.GetString(buffer, 0, result.Count));
+                                }
+                            }))
                                 .Select(m => JsonConvert.SerializeObject(m, serializerSettings))
                                 .Do(async message =>
                                 {

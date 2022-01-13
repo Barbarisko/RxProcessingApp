@@ -24,6 +24,8 @@ namespace ProcessingApp.Price_Service.Src.Service.Impl
         {
             _logger = logger;
             _cryptoService = cryptoService ?? throw new ArgumentNullException(nameof(cryptoService));
+            _logger.LogInformation("Price service started");
+
         }
 
         public IObservable<MessageDTO<float>> PricesStream(IObservable<long> intervalPreferencesStream)
@@ -77,7 +79,8 @@ namespace ProcessingApp.Price_Service.Src.Service.Impl
 
         // Visible for testing
         // TODO: Remove as should be implemented by trainees
-        private static IObservable<MessageDTO<float>> AveragePrice(IObservable<long> requestedInterval,
+        private static IObservable<MessageDTO<float>> AveragePrice(
+            IObservable<long> requestedInterval,
             IObservable<MessageDTO<float>> priceData)
         {
             return priceData

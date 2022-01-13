@@ -58,7 +58,7 @@ namespace ProcessingApp.Trade_Service.Src.Service.impl
         private IObservable<Trade> MapToDomainTrade(IObservable<MessageDTO<MessageTrade>> input)
         {
             // TODO: Add implementation to mapping to com.example.part_10.domain.Trade
-            return input.Select(DomainMapper.MapToDomain);
+            return Observable.Never<Trade>();
         }
 
 

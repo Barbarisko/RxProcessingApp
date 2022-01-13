@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
+
 using ProcessingApp.Crypto_Service_Idl.Src.Service;
 using ProcessingApp.Crypto_Service.Src.Service.External.Utils;
+using ProcessingApp.Common.Src.Service.Utils;
 
 namespace ProcessingApp.Crypto_Service.Src.Service.External
 {
@@ -35,6 +36,7 @@ namespace ProcessingApp.Crypto_Service.Src.Service.External
         private static IObservable<T> ProvideResilience<T>(IObservable<T> input)
         {
             return input.RetryWithBackoffStrategy();
+            //return Observable.Never<T>();
         }
 
         // TODO: implement caching of 3 last elements & multi subscribers support
