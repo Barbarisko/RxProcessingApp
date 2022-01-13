@@ -27,7 +27,8 @@ namespace ProcessingApp.Sockets
                 .Merge<dynamic>(_tradeService.TradesStream());
         }
 
-        private static IObservable<long> HandleRequestedAveragePriceIntervalValue(IObservable<string> requestedInterval)
+        private static IObservable<long> HandleRequestedAveragePriceIntervalValue(
+            IObservable<string> requestedInterval)
         {
             var checkedInterval = requestedInterval
                 .Where(i => long.TryParse(i, out var o) && o > 0 && o <= 60)

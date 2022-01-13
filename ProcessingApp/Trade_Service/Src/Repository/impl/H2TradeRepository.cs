@@ -37,7 +37,7 @@ namespace ProcessingApp.Trade_Service.Src.Repository.impl
                 throw new ArgumentNullException(nameof(connectionString));
             _connectionString = connectionString;
 
-            //InitDB();
+            InitDB();
             PingDB();
             ReportDbStatistics();
         }
