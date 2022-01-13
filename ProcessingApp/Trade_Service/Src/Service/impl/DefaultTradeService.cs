@@ -50,21 +50,34 @@ namespace ProcessingApp.Trade_Service.Src.Service.impl
             IObservable<Dictionary<string, object>> input)
         {
             // TODO: Add implementation to produce trading events
-            return Observable.Never<MessageDTO<MessageTrade>>();
+            return input
+                .Where(MessageMapper.IsTradeMessageType)
+                .Select(MessageMapper.MapToTradeMessage);
         }
 
         private IObservable<Trade> MapToDomainTrade(IObservable<MessageDTO<MessageTrade>> input)
         {
             // TODO: Add implementation to mapping to com.example.part_10.domain.Trade
-            return Observable.Never<Trade>();
+            return input.Select(DomainMapper.MapToDomain);
         }
+
+
 
         private static IObservable<int> ResilientlyStoreByBatchesToAllRepositories(
             IObservable<Trade> input,
             ITradeRepository tradeRepository1,
             ITradeRepository tradeRepository2)
         {
-            return Observable.Never<int>();
+            return input.Buffer(10)
+                .SelectMany(batch => ResilientlyStoreBatchToRepository(batch, tradeRepository1)
+                    .Merge(ResilientlyStoreBatchToRepository(batch, tradeRepository2)));
+        }
+
+        private static IObservable<int> ResilientlyStoreBatchToRepository(IList<Trade> batch, ITradeRepository tradeRepository)
+        {
+            return tradeRepository
+                .SaveAll(batch)
+                .RetryWithBackoffStrategy();
         }
     }
 }
